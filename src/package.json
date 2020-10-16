@@ -4,7 +4,8 @@
   "description": "Example 1 of tst-reflect",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "repl": "npm i && npx ttsc && node index.js"
   },
   "keywords": [],
   "author": "Roman Jámbor",
@@ -13,6 +14,6 @@
     "tst-reflect": "^0.1.4",
     "typescript": "^4.0.3",
     "ttypescript": "^1.5.10",
-    "tst-reflect-transformer": "^0.1.0"
+    "tst-reflect-transformer": "^0.1.1"
   }
 }

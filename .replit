@@ -1,2 +1,2 @@
-run = "cd src && npm i && npx ttsc && node index.js"
+run = "cd src && npm run repl"
 language = "typescript"

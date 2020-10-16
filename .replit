@@ -1,0 +1,2 @@
+run = "cd src && npm i && npx ttsc && node index.js"
+language = "typescript"

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "repl": "npm i && npx ttsc && node index.js"
+    "repl": "npm i && npx ttsc && clear && node index.js"
   },
   "keywords": [],
   "author": "Roman Jámbor",

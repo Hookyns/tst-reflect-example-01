@@ -35,7 +35,7 @@ export class ServiceProvider
             type = getType<TDependency>();
         }
 
-        const implementations = Array.from(this._serviceCollection.services).find(([dependency]) => type.is(dependency))?.[1];
+        const implementations: Array<Type> | undefined = Array.from(this._serviceCollection.services).find(([dependency]) => type.is(dependency))?.[1];
 
         if (!implementations || !implementations.length)
         {
@@ -50,6 +50,10 @@ export class ServiceProvider
 
                 for (let impl of implementations)
                 {
+                    if (!(impl instanceof Type)) {
+                        yield impl;
+                    }
+                    
                     if (!impl.getConstructors()?.length)
                     {
                         yield Reflect.construct(impl.ctor, []);

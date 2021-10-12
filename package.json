@@ -12,7 +12,7 @@
     "license": "MIT",
     "dependencies": {
         "tst-reflect": "^0.4.2",
-        "tst-reflect-transformer": "^0.5.1",
+        "tst-reflect-transformer": "^0.5.3",
         "typescript": "^4.0.3",
         "ttypescript": "^1.5.12"
     }

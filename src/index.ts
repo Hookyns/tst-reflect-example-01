@@ -1,90 +1,58 @@
-import {getType, Type} from "tst-reflect";
+import { getType }           from "tst-reflect";
+import { ServiceCollection } from "./ServiceCollection";
+import { ServiceProvider }   from "./ServiceProvider";
 
-class ServiceCollection
+interface IPrinter
 {
-	public readonly services: Array<[Type, any]> = [];
-
-	addTransient(dependencyType: Type, dependencyImplementation: Type | any)
-	{
-		this.services.push([dependencyType, dependencyImplementation]);
-	}
-}
-
-class ServiceProvider
-{
-	private readonly serviceCollection: ServiceCollection;
-
-	constructor(serviceCollection: ServiceCollection)
-	{
-		this.serviceCollection = serviceCollection;
-	}
-
-	getService<TDependency>(type: Type): TDependency
-	{
-		// Find implementation of type
-		const [, impl] = this.serviceCollection.services.find(([dep]) => dep.is(type));
-
-		if (!impl)
-		{
-			throw new Error(`No implementation registered for '${type.name}'`);
-		}
-
-		if (!(impl instanceof Type))
-		{
-			return impl;
-		}
-
-		if (!impl.isClass())
-		{
-			throw new Error("Registered implementation is not class.");
-		}
-
-		// Parameter-less
-		if (!impl.getConstructors()?.length)
-		{
-			return Reflect.construct(impl.ctor, []);
-		}
-
-		// Ctor with less parameters preferred
-		const ctor = impl.getConstructors().sort((a, b) => a.parameters.length > b.parameters.length ? 1 : 0)[0];
-
-		// Resolve parameters
-		const args = ctor.parameters.map(param => this.getService(param.type))
-
-		return Reflect.construct(impl.ctor, args);
-	}
-}
-
-interface IPrinter {
-	printHelloWorld();
-	printText(text: string);
+    printHelloWorld();
+    printText(text: string);
 }
 
 class ConsolePrinter implements IPrinter
 {
-	private readonly console: Console;
+    private readonly console: Console;
 
-	constructor(console: Console)
-	{
-		this.console = console;
-	}
+    constructor(console: Console)
+    {
+        this.console = console;
+    }
 
-	printHelloWorld()
-	{
-		this.console.log("Hello World!")
-	}
+    printHelloWorld()
+    {
+        this.console.log("Hello World!");
+    }
 
-	printText(text: string)
-	{
-		this.console.log(text)
-	}
+    printText(text: string)
+    {
+        this.console.log(text);
+    }
+}
+
+interface IService
+{
+    doJob(number: number);
+}
+
+class Service implements IService
+{
+    constructor(private printer: IPrinter, private console: Console)
+    {
+        console.log("Service is using printer:", printer.constructor.name);
+    }
+
+    doJob(number: number)
+    {
+        const job = number + number;
+        this.printer.printText(`${number} + ${number} = ${job}`);
+    }
 }
 
 //-----------------------------------------
 
 const collection = new ServiceCollection();
 
-collection.addTransient(getType<IPrinter>(), getType<ConsolePrinter>());
+collection.addTransient<IService, Service>();
+collection.addTransient<IPrinter, ConsolePrinter>();
 collection.addTransient(getType<Console>(), console);
 
 const provider = new ServiceProvider(collection);
@@ -95,5 +63,9 @@ const printer = provider.getService<IPrinter>(getType<IPrinter>());
 console.log("printer is instanceof ConsolePrinter:", printer instanceof ConsolePrinter);
 
 printer.printHelloWorld();
+
+const service = provider.getService<IService>();
+service.doJob(10);
+
 printer.printText("Try it on repl.it");
 printer.printText("And good bye!");

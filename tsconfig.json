@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES2019",
+        "rootDir": ".",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "plugins": [
+            {
+                "transform": "tst-reflect-transformer"
+            }
+        ]
+    },
+    "include": [
+        "src/index.ts"
+    ],
+    "reflection": {
+        "metadata": false,
+        "debugMode": true
+    }
+}

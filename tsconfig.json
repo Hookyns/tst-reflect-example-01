@@ -17,6 +17,6 @@
     ],
     "reflection": {
         "metadata": false,
-        "debugMode": true
+        "debugMode": false
     }
 }
